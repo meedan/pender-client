@@ -26,6 +26,7 @@ With this gem you can call methods from pender's API and also test them by using
 The available methods are:
 
 * PenderClient::Request.get_medias (`GET /api/medias`)
+* PenderClient::Request.delete_medias (`DELETE /api/medias`)
 
 If you are going to test something that uses the 'pender_client' service, first you need to mock each possible response it can return, which are:
 
@@ -34,6 +35,8 @@ If you are going to test something that uses the 'pender_client' service, first 
 * PenderClient::Mock.mock_medias_returns_access_denied
 * PenderClient::Mock.mock_medias_returns_timeout
 * PenderClient::Mock.mock_medias_returns_api_limit_reached
+* PenderClient::Mock.mock_delete_medias_returns_access_denied
+* PenderClient::Mock.mock_delete_medias_returns_success
 
 ## Contributing
 

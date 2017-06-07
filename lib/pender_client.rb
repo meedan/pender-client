@@ -20,6 +20,11 @@ module PenderClient
     def self.get_medias(host = nil, params = {}, token = '', headers = {})
       request('get', host, '/api/medias', params, token, headers)
     end
+
+    # DELETE /api/medias
+    def self.delete_medias(host = nil, params = {}, token = '', headers = {})
+      request('delete', host, '/api/medias', params, token, headers)
+    end
            
     private
 
@@ -29,7 +34,7 @@ module PenderClient
       klass = 'Net::HTTP::' + method.capitalize
       request = nil
 
-      if method == 'get'
+      if method == 'get' || method == 'delete'
         querystr = params.reject{ |k, v| v.blank? }.collect{ |k, v| k.to_s + '=' + CGI::escape(v.to_s) }.reverse.join('&')
         (querystr = '?' + querystr) unless querystr.blank?
         request = klass.constantize.new(uri.path + querystr)
@@ -109,6 +114,27 @@ module PenderClient
       yield
       WebMock.allow_net_connect!
     end
-             
+
+    def self.mock_delete_medias_returns_success(host = nil)
+      WebMock.disable_net_connect!
+      host ||= PenderClient.host
+      WebMock.stub_request(:delete, host + '/api/medias')
+      .with({:query=>{:url=>"https://www.youtube.com/user/MeedanTube"}, :headers=>{"X-Pender-Token"=>"test"}})
+      .to_return(body: '{"type":"success"}', status: 200)
+      @data = {"type"=>"success"}
+      yield
+      WebMock.allow_net_connect!
+    end
+
+    def self.mock_delete_medias_returns_access_denied(host = nil)
+      WebMock.disable_net_connect!
+      host ||= PenderClient.host
+      WebMock.stub_request(:delete, host + '/api/medias')
+      .with({:query=>{:url=>"https://www.youtube.com/user/MeedanTube"}})
+      .to_return(body: '{"type":"error","data":{"message":"Unauthorized","code":1}}', status: 401)
+      @data = {"type"=>"error", "data"=>{"message"=>"Unauthorized", "code"=>1}}
+      yield
+      WebMock.allow_net_connect!
+    end
   end
 end
