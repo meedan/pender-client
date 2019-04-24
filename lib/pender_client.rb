@@ -1,4 +1,5 @@
 require 'pender_client/version'
+require 'pender_client/constants'
 require 'webmock'
 require 'net/http'
 module PenderClient
