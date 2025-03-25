@@ -50,6 +50,8 @@ module PenderClient
 
       http = Net::HTTP.new(uri.hostname, uri.port)
       http.use_ssl = uri.scheme == 'https'
+      http.open_timeout = 5
+      http.read_timeout = 30
       response = http.request(request)
       if response.code.to_i === 401
         raise 'Unauthorized'
