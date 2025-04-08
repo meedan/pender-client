@@ -18,8 +18,8 @@ module PenderClient
   module Request
     
     # GET /api/medias
-    def self.get_medias(host = nil, params = {}, token = '', headers = {})
-      request('get', host, '/api/medias', params, token, headers)
+    def self.get_medias(host = nil, params = {}, token = '', timeout = 120, headers = {})
+      request('get', host, '/api/medias', params, token, timeout, headers)
     end
 
     # DELETE /api/medias
@@ -29,7 +29,7 @@ module PenderClient
            
     private
 
-    def self.request(method, host, path, params = {}, token = '', headers = {})
+    def self.request(method, host, path, params = {}, token = '', timeout = 120, headers = {})
       host ||= PenderClient.host
       uri = URI(host + path)
       klass = 'Net::HTTP::' + method.capitalize
@@ -51,7 +51,7 @@ module PenderClient
       http = Net::HTTP.new(uri.hostname, uri.port)
       http.use_ssl = uri.scheme == 'https'
       http.open_timeout = 5
-      http.read_timeout = 30
+      http.read_timeout = timeout
       response = http.request(request)
       if response.code.to_i === 401
         raise 'Unauthorized'
