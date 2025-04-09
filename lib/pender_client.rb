@@ -18,13 +18,13 @@ module PenderClient
   module Request
     
     # GET /api/medias
-    def self.get_medias(host = nil, params = {}, token = '', timeout = 120, headers = {})
+    def self.get_medias(host = nil, params = {}, token = '', timeout = nil, headers = {})
       request('get', host, '/api/medias', params, token, timeout, headers)
     end
 
     # DELETE /api/medias
-    def self.delete_medias(host = nil, params = {}, token = '', headers = {})
-      request('delete', host, '/api/medias', params, token, headers)
+    def self.delete_medias(host = nil, params = {}, token = '', timeout = nil, headers = {})
+      request('delete', host, '/api/medias', params, token, timeout, headers)
     end
            
     private
